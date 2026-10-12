@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+body{
+  font-family: 'Inter', sans-serif;
+}
+.font-heading{
+  font-family: "Cormorant Garamond", serif;
+}
+.green{
+  color:#77895D;
+}
+.brown{
+  color:#76563B;
+}
