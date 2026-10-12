@@ -96,7 +96,7 @@ const Footer = () => {
         className={`mx-auto w-full max-w-[1440px] ${SIDE_PADDING} py-[48px] md:py-[60px] xl:py-[74px]`}
       >
         {/* mobile: 1 col | tablet: 2 cols | desktop: single row */}
-        <div className="grid grid-cols-1 gap-x-[40px] gap-y-[40px] md:grid-cols-2 xl:flex xl:items-start xl:gap-[246px]">
+        <div className="grid grid-cols-1 gap-x-[40px] gap-y-[40px] md:grid-cols-2 xl:flex xl:items-start xl:gap-[240px]">
           {/* Column 1: logo, description, awards */}
           <div className="flex min-w-0 flex-col items-start">
             <img
