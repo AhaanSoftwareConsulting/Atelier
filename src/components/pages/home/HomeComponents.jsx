@@ -3,7 +3,7 @@ import HomeBanner from './components/HomeBanner'
 import WhatWeOffer from './components/WhatWeOffer';
 import Whychooseus from './components/Whychooseus'
 import Made from './components/Made'
-import Faq from '../faq/Faq'
+import Faq from '../faq/components/Faq'
 import Cta from './components/Cta'
 import OurStory from './components/OurStory'
 

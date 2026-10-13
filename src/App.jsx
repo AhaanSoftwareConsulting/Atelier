@@ -9,10 +9,10 @@ import AboutComponents from "./components/pages/about/AboutComponents";
 import ProductComponents from "./components/pages/product/ProductComponents";
 import ContactComponents from "./components/pages/contact/ContactComponents";
 import ServiceComponents from "./components/pages/service/ServiceComponents";
-import FaqComponent from "./components/pages/faq/FaqComponent";
 import Header from "./components/layouts/header/Header";
 import TopHeader from "./components/layouts/header/TopHeader";
 import Footer from "./components/layouts/footer/Footer";
+import FaqComponents from "./components/pages/faq/FaqComponent";
 
 function App() {
   return (
@@ -26,7 +26,7 @@ function App() {
           <Route path="/services" element={<ServiceComponents />} />
           <Route path="/contact" element={<ContactComponents />} />
           <Route path="/product" element={<ProductComponents />} />
-          <Route path="/faq" element={<FaqComponent />} />
+          <Route path="/faq" element={<FaqComponents />} />
         </Routes>
         <Footer />
       </BrowserRouter>
