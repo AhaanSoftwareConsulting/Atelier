@@ -6,6 +6,9 @@ body{
 .font-heading{
   font-family: "Cormorant Garamond", serif;
 }
+.font-highlight{
+  font-family: "Vujahday Script", cursive;
+}
 .green{
   color:#77895D;
 }
