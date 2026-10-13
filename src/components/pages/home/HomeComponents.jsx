@@ -1,10 +1,9 @@
 import React from 'react'
 import HomeBanner from './components/HomeBanner'
-import WhatWeOffer from './components/WhatWeOffer'
+import WhatWeOffer from './components/WhatWeOffer';
 import Made from './components/Made'
 import Faq from '../faq/Faq'
 import Cta from './components/Cta'
-
 
 const HomeComponents = () => {
   return (
@@ -14,6 +13,7 @@ const HomeComponents = () => {
       <Made/>
       <Faq/>
       <Cta/>
+      
     </div>
   )
 }
