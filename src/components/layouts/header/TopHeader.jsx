@@ -3,10 +3,10 @@ import {FacebookLogoIcon, InstagramLogoIcon, LinkedinLogoIcon} from "@phosphor-i
 const TopHeader = () => {
 
   return (
-    <div className="relative flex min-h-11 items-center justify-center bg-[#76563B] px-4 text-white">
+    <div className="relative flex min-h-11 items-center justify-between md:justify-center bg-[#76563B] px-4 text-white">
 
       {/* Center announcement */}
-       <p className="text-center text-sm"> SOUTHERN FLAVOR. THOUGHTFUL GIFTS. MADE WITH LOVE.</p>
+       <p className="text-start md:text-center text-[8px] md:text-sm"> SOUTHERN FLAVOR. THOUGHTFUL GIFTS. MADE WITH LOVE.</p>
       {/* Right social icons */}
       <div className="absolute right-4 top-1/2 flex -translate-y-1/2 items-center gap-1 sm:right-8 ">
        <a

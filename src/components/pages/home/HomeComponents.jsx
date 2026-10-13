@@ -4,12 +4,14 @@ import WhatWeOffer from './components/WhatWeOffer';
 import Made from './components/Made'
 import Faq from '../faq/Faq'
 import Cta from './components/Cta'
+import OurStory from './components/OurStory'
 
 const HomeComponents = () => {
   return (
     <div>
       <HomeBanner/>
       <WhatWeOffer/>
+      <OurStory/>
       <Made/>
       <Faq/>
       <Cta/>

@@ -36,7 +36,7 @@ export default function WhatWeOffer() {
       <div className="mx-auto max-w-[1440px]">
 
         {/* Section title */}
-        <h2 className="mb-8 text-center font-heading text-3xl font-normal uppercase leading-tight tracking-wide text-[#77895D] sm:mb-10 sm:text-4xl">
+        <h2 className="mb-8 text-center font-heading text-3xl font-semibold uppercase leading-tight tracking-wide text-[#77895D] sm:mb-10 lg:text-5xl">
           What We Offer
         </h2>
 
@@ -68,14 +68,19 @@ export default function WhatWeOffer() {
               {/* Button */}
               <a
                 href={offer.link}
-                className="mt-4 inline-flex min-h-[40px] items-center gap-3 rounded-full bg-[#77895D] py-1.5 pl-4 pr-1.5 text-[12px] font-medium text-white transition-colors duration-300 hover:bg-[#667a50]"
+                className="group mt-6 inline-flex max-w-fit items-center gap-3 rounded-full bg-[#77895D] py-2 md:py-2.5 pl-4 pr-2.5 font-inter text-[10px] font-medium uppercase text-white transition-colors duration-300 hover:bg-[#5E432D] sm:gap-4 sm:pl-5 sm:text-sm"
               >
                 {offer.buttonText}
 
-                <span className="flex h-10 w-10  items-center justify-center rounded-full bg-white text-lg leading-none text-[#77895D]">
-                                            <ArrowUpRightIcon size={16} />
-                                          </span>
+                <span className="flex w-6 h-6 md:h-8 md:w-8 shrink-0 items-center justify-center rounded-full bg-white text-[#77895D]">
+                            <ArrowUpRightIcon
+                              size={16}
+                              weight="bold"
+                              className="transition-transform duration-300 group-hover:rotate-90"
+                            />
+                          </span>
               </a>
+
             </div>
           ))}
         </div>
