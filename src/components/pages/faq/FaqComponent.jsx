@@ -2,7 +2,7 @@ import React from 'react'
 import FaqBanner from './components/Faqbanner'
 import Faq from './components/Faq'
 import Cta from '../home/components/Cta'
-const FaqComponents = () => {
+const FaqComponent = () => {
   return (
     <div>
       <FaqBanner/>
@@ -12,4 +12,4 @@ const FaqComponents = () => {
   )
 }
 
-export default FaqComponents
+export default FaqComponent
