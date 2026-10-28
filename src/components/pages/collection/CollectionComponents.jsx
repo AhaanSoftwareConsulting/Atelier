@@ -1,8 +1,11 @@
 import React from 'react'
+import CollectionBanner from "../collection/CollectionBanner"
 
 const CollectionComponents = () => {
   return (
-    <div>CollectionComponents</div>
+    <div>
+      <CollectionBanner/>
+    </div>
   )
 }
 
