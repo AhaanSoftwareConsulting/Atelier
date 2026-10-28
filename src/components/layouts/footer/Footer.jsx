@@ -147,7 +147,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 gap-14 pt-14 lg:grid-cols-[minmax(0,1fr)_minmax(0,0.85fr)] lg:gap-16 lg:pt-16 xl:gap-24">
           {/* ---- left: heading + form ---- */}
           <div className="max-w-[660px]">
-            <h2 className="font-heading text-[32px] font-normal uppercase leading-[1.1] text-white sm:text-[40px] lg:text-[50px]">
+            <h2 className="font-heading text-[32px] font-normal uppercase leading-[1.1] text-white sm:text-[40px] lg:text-[40px] xl:text-[50px]">
               Find the piece
               <br />
               that feels like yours.
