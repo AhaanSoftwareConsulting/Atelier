@@ -60,7 +60,7 @@ export default function Header() {
           <a
             href="#collection"
             onClick={() => setMenuOpen(false)}
-            className="hidden shrink-0 items-center justify-center rounded-full bg-[#8B755A] px-[30px] py-[15px] text-base font-medium tracking-wide text-white transition-all duration-300 hover:bg-[#c0a783] hover:text-[#26170e] lg:inline-flex"
+            className="hidden shrink-0 items-center cursor pointer justify-center rounded-full bg-[#8B755A] px-[30px] py-[15px] text-base font-medium tracking-wide text-white transition-all duration-300 hover:bg-[#c0a783] hover:text-[#26170e] lg:inline-flex"
           >
             EXPLORE COLLECTION
           </a>
