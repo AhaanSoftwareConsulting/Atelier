@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 const quickLinks = [
   { label: "Home", href: "#" },
@@ -51,7 +51,9 @@ function Field({ label, id, children }) {
 function MenuColumn({ title, items, linkColor, hoverColor }) {
   return (
     <div>
-      <h4 className="text-[20px] font-normal text-[#6B655B]">{title}</h4>
+      <h4 className="font-heading text-[20px] font-normal text-[#6B655B]">
+        {title}
+      </h4>
       <ul className="mt-6 flex flex-col gap-5">
         {items.map((item) => (
           <li key={item.label}>
@@ -84,24 +86,32 @@ function AnimatedDivider() {
           io.disconnect();
         }
       },
-      { threshold: 0.5 }
+      { threshold: 0, rootMargin: "0px 0px -10% 0px" }
     );
     io.observe(el);
     return () => io.disconnect();
   }, []);
 
   return (
-    <div
-      ref={ref}
-      className={`h-px w-full origin-left bg-[#FFFFFF80] transition-transform duration-1000 ease-out ${visible ? "scale-x-100" : "scale-x-0"
-        }`}
-    />
+    // wrapper stays full width so the observer can always detect it
+    <div ref={ref} className="relative w-full py-2">
+      {/* base line: draws in from left to right */}
+      <div
+        className={`h-px w-full origin-left bg-[#FFFFFF80] transition-transform duration-[1500ms] ease-out ${visible ? "scale-x-100" : "scale-x-0"
+          }`}
+      />
+
+      {/* pulse layer: starts after the line has drawn in */}
+      {visible && (
+        <div className="pointer-events-none absolute left-0 top-2 h-px w-full bg-[#8B755A] opacity-0 shadow-[0_0_8px_1px_#8B755A] animate-divider-pulse [animation-delay:1500ms] motion-reduce:animate-none" />
+      )}
+    </div>
   );
 }
 
 /* ---------- footer ---------- */
 
-export default function Footer() {
+const Footer = () => {
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
@@ -117,6 +127,16 @@ export default function Footer() {
   const handleSubmit = (e) => {
     e.preventDefault();
     console.log(form); // TODO: send to your API
+
+    // clear all fields after a successful submit
+    setForm({
+      firstName: "",
+      lastName: "",
+      email: "",
+      phone: "",
+      topic: "",
+      message: "",
+    });
   };
 
   return (
@@ -141,7 +161,6 @@ export default function Footer() {
             <form
               onSubmit={handleSubmit}
               className="mt-10 flex flex-col gap-8"
-              noValidate
             >
               <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 sm:gap-10">
                 <Field label="First Name*" id="firstName">
@@ -185,9 +204,16 @@ export default function Footer() {
                     id="phone"
                     name="phone"
                     type="tel"
+                    inputMode="numeric"
+                    maxLength={15}
                     required
                     value={form.phone}
-                    onChange={handleChange}
+                    onChange={(e) =>
+                      setForm((prev) => ({
+                        ...prev,
+                        phone: e.target.value.replace(/\D/g, ""),
+                      }))
+                    }
                     className={fieldCls}
                   />
                 </Field>
@@ -248,7 +274,7 @@ export default function Footer() {
           {/* ---- right: menus (2 columns) ---- */}
           <div className="grid grid-cols-1 gap-x-10 gap-y-12 sm:grid-cols-2 lg:pl-4 lg:pt-1 xl:pl-10">
             <MenuColumn
-              title="Quick Links"
+              title="QUICK LINKS"
               items={quickLinks}
               linkColor="text-[#F4F1EA]"
               hoverColor="hover:text-[#8B755A]"
@@ -256,8 +282,8 @@ export default function Footer() {
 
             {/* contact us */}
             <div>
-              <h4 className="text-[20px] font-normal text-[#6B655B]">
-                Contact Us
+              <h4 className="font-heading text-[20px] font-normal text-[#6B655B]">
+                CONTACT US
               </h4>
               <div className="mt-6 flex flex-col gap-5">
                 <a
@@ -279,14 +305,14 @@ export default function Footer() {
             </div>
 
             <MenuColumn
-              title="Products"
+              title="PRODUCTS"
               items={products}
               linkColor="text-[#F4F1EA]"
               hoverColor="hover:text-[#8B755A]"
             />
 
             <MenuColumn
-              title="Follow Us"
+              title="FOLLOW US"
               items={social}
               linkColor="text-[#8B755A]"
               hoverColor="hover:text-white"
@@ -300,12 +326,12 @@ export default function Footer() {
         </div>
 
         {/* ===== copyright row ===== */}
-        <div className="flex flex-col items-start justify-between gap-3 py-6 sm:flex-row sm:items-center">
+        <div className="flex flex-col items-center justify-between gap-3 py-6 text-center sm:flex-row sm:text-left">
           <p className="text-[14px] font-normal uppercase text-[#F4F1EA] sm:text-[16px]">
             © 2026 Atelier. All rights reserved.
           </p>
 
-          <div className="flex items-center gap-4 text-[14px] font-normal text-[#F4F1EA] sm:text-[16px]">
+          <div className="flex items-center justify-center gap-4 text-[14px] font-normal text-[#F4F1EA] sm:justify-end sm:text-[16px]">
             <a href="/terms" className="transition-colors duration-300 hover:text-[#8B755A]">
               T&amp;C
             </a>
@@ -331,7 +357,7 @@ export default function Footer() {
             textLength="1440"
             lengthAdjust="spacingAndGlyphs"
             className="fill-[#8B755A] font-heading"
-            style={{ fontSize: 300, fontWeight: 400 }}
+            style={{ fontSize: 300, fontWeight: 500 }}
           >
             ATELIER
           </text>
@@ -339,4 +365,6 @@ export default function Footer() {
       </div>
     </footer>
   );
-}
+};
+
+export default Footer;
