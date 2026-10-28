@@ -1,17 +1,9 @@
 @import "tailwindcss";
 
 body{
-  font-family: 'Inter', sans-serif;
+  font-family: "Work Sans", sans-serif;
 }
 .font-heading{
-  font-family: "Cormorant Garamond", serif;
+   font-family: "Fraunces", serif;
 }
-.font-highlight{
-  font-family: "Vujahday Script", cursive;
-}
-.green{
-  color:#77895D;
-}
-.brown{
-  color:#76563B;
-}
+
