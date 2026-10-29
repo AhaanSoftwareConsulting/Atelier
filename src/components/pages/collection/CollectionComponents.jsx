@@ -1,5 +1,6 @@
 import React from 'react'
-import CollectionBanner from "../collection/CollectionBanner"
+import CollectionBanner from "../collection/CollectionBanner";
+
 
 const CollectionComponents = () => {
   return (
