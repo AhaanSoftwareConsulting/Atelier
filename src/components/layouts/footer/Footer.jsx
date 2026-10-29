@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from "react";
 
 const quickLinks = [
-  { label: "Home", href: "#" },
+  { label: "Home", href: "/" },
   { label: "About", href: "#" },
-  { label: "Collection", href: "#" },
+  { label: "Collection", href: "/collection" },
   { label: "Contact", href: "#" },
 ];
 

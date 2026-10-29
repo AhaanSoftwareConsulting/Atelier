@@ -4,8 +4,8 @@ import { ListIcon, XIcon } from "@phosphor-icons/react";
 import logo from "../../../assets/logo.png";
 
 const navItems = [
-  { label: "HOME", href: "#home" },
-  { label: "COLLECTION", href: "#collection" },
+  { label: "HOME", href: "/" },
+  { label: "COLLECTION", href: "/collection" },
   { label: "ABOUT", href: "#about" },
   { label: "CONTACT", href: "#contact" },
 ];
@@ -134,7 +134,7 @@ export default function Header() {
         </nav>
 
         <a
-          href="#collection"
+          href="/collection"
           tabIndex={menuOpen ? 0 : -1}
           onClick={() => setMenuOpen(false)}
           className="mt-8 flex items-center justify-center gap-2 rounded-full bg-[#8B755A] px-5 py-4 text-[10px] tracking-wide text-white transition-colors hover:bg-[#c0a783] hover:text-[#26170e] shadow-sm"
