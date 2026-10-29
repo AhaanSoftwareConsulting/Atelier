@@ -23,7 +23,7 @@ export default function Hero() {
             UNIQUELY YOURS
           </h1>
 
-          <p className="mt-4 max-w-[430px] text-[13px] leading-[1.65] text-white/90 sm:text-[14px]">
+          <p className="mt-4 max-w-[620px] text-sm leading-[1.65] text-white/90 sm:text-[22px]">
            Discover fine rings, bespoke timepieces, and handcrafted leather straps, thoughtfully designed for those who appreciate the art of detail.
           </p>
 

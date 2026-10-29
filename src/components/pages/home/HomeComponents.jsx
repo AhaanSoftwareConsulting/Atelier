@@ -4,6 +4,7 @@ import Objects from "../home/Objects";
 import Discover from "../home/Discover";
 import ArtSlider from './ArtSlider';
 import OurStory from './OurStory';
+import FeaturedProducts from './FeaturedProducts';
 
 const HomeComponents = () => {
   return (
@@ -11,6 +12,7 @@ const HomeComponents = () => {
       <HomeBanner/>
       <Objects/>
       <OurStory/>
+      <FeaturedProducts/>
       <Discover/>
       <ArtSlider/>
     </div>
