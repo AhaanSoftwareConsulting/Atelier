@@ -154,7 +154,7 @@ const AllPieces = () => {
     return (
         <section className="w-full overflow-hidden ">
             {/* ===== max-width container ===== */}
-            <div className="relative mx-auto w-full  px-4 md:px-8 xl:px-[60px] py-[90px]">
+            <div className="relative mx-auto w-ful">
                
 
                 {/* AllPieces slider */}
