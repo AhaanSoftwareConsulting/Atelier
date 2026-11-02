@@ -1,21 +1,27 @@
+
 import React, { useState } from "react";
+import AllPieces from "./AllPieces";
+import Rings from "./Rings";
+import BespokeWatches from "./BespokeWatches";
+import BespokeStraps from "./BespokeStraps";
+
 
 // Tab labels. "value" is what you can use later to filter / fetch WooCommerce products
 // (e.g. map each value to a WooCommerce category slug).
 const tabs = [
-  { label: "All Pieces", value: "all" },
+  { label: "All Pieces", value: "all-pieces" },
   { label: "Rings", value: "rings" },
   { label: "Bespoke Watches", value: "bespoke-watches" },
-  { label: "Leather Straps", value: "leather-straps" },
+  { label: "Bespoke Straps", value: "leather-straps" },
 ];
 
 const ExploreCollections = () => {
   const [activeTab, setActiveTab] = useState(tabs[0].value);
 
   return (
-    <section className="w-full overflow-hidden bg-[#F5F1EA] font-body">
+    <section className="overflow-hidden bg-[#F5F1EA] ">
       {/* ===== max-width container ===== */}
-      <div className="mx-auto w-full max-w-[1440px] px-5 py-12 sm:px-8 sm:py-16 lg:px-[60px] lg:py-[80px]">
+      <div className="relative mt-10 mx-auto  max-w-[1440px]">
         {/* ---- heading ---- */}
         <h2 className="text-center font-heading text-[32px] font-normal uppercase leading-[1.1] text-[#272522] sm:text-[48px] xl:text-[65px]">
           Explore the collections
@@ -52,7 +58,15 @@ const ExploreCollections = () => {
 
         {/* ---- products area (WooCommerce products will go here) ----
             Use `activeTab` to fetch / filter products by category. */}
-        <div className="mt-10 lg:mt-12" data-active-tab={activeTab} />
+        <div>
+        {activeTab === "all-pieces" && <AllPieces />}
+
+        {activeTab === "rings" && <Rings />}
+
+        {activeTab === "bespoke-watches" && <BespokeWatches />}
+
+        {activeTab === "leather-straps" && <BespokeStraps />}
+      </div>
       </div>
     </section>
   );
