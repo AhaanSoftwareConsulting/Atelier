@@ -8,7 +8,7 @@ const collections = [
     description:
       "Sculptural forms and refined details, designed to make a lasting impression.",
     buttonText: "EXPLORE RINGS",
-    href: "#rings",
+    href: "/collection#rings",
     image: card1,
     imageAlt: "Gold signature rings on a dark reflective surface",
   },
@@ -18,7 +18,7 @@ const collections = [
     description:
       "Precision, character, and timeless design come together in distinctive timepieces.",
     buttonText: "EXPLORE WATCHES",
-    href: "#watches",
+    href: "/collection#watches",
     image: card2,
     imageAlt: "Elegant wristwatch with a brown leather strap",
   },
@@ -28,7 +28,7 @@ const collections = [
     description:
       "Beautiful textures and considered finishes bring a personal touch to every timepiece.",
     buttonText: "EXPLORE STRAPS",
-    href: "#straps",
+    href: "/collection#straps",
     image: card3,
     imageAlt: "Crafted leather watch straps on a work surface",
   },
