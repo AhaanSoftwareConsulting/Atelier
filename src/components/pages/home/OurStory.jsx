@@ -46,7 +46,7 @@ export default function OurStory() {
             Our Story
           </h2>
 
-          <p className="w-full text-sm leading-[1.8] text-justify md:text-base">
+          <p className="w-full text-sm leading-[1.8] md:text-base">
             Discover a considered collection of fine rings, bespoke timepieces, and handcrafted leather watch straps. Each piece reflects a thoughtful approach to design, refined materials, and timeless elegance, created for those who appreciate the beauty of every detail.
           </p>
         </div>

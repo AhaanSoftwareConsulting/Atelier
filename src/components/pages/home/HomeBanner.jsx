@@ -28,7 +28,7 @@ export default function Hero() {
           </p>
 
            <a
-            href="#collection"
+            href="/collection"
            
             className="mt-5 xl:mt-10 rounded-full cursor pointer bg-[#8B755A] px-5 py-3 text-sm xl:px-[30px] xl:py-[15px] xl:text-base font-medium tracking-wide text-white transition-all duration-300 hover:bg-[#c0a783] hover:text-[#26170e] inline-flex"
           >

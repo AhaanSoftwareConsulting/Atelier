@@ -32,7 +32,7 @@ export default function Header() {
   };
 
   const navLinkClass = (href) =>
-    `rounded-full px-[15px] py-2.5 text-base font-medium tracking-wide transition-all duration-300 ${
+    `rounded-[10px] px-[15px] py-2.5 text-base font-medium tracking-wide transition-all duration-300 ${
       isActive(href)
         ? "bg-white/15 text-white"
         : "text-white hover:bg-white/10"
