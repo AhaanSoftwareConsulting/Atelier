@@ -1,9 +1,9 @@
 
 import React, { useState } from "react";
 import AllPieces from "./AllPieces";
-import Rings from "./Rings";
-import BespokeWatches from "./BespokeWatches";
-import BespokeStraps from "./BespokeStraps";
+import RingSlider from "./RingSlider";
+import BespokeWatchesSlider from "./BespokeWatchesSlider";
+import BespokeStrapsSlider from "./BespokeStrapsSlider";
 
 
 // Tab labels. "value" is what you can use later to filter / fetch WooCommerce products
@@ -21,7 +21,7 @@ const ExploreCollections = () => {
   return (
     <section className="overflow-hidden bg-[#F5F1EA] ">
       {/* ===== max-width container ===== */}
-      <div className="relative mt-10 mx-auto  max-w-[1440px]">
+      <div className="relative mt-10 mx-auto  max-w-[1440px] px-4 md:px-8 xl:px-[60px] py-[90px]">
         {/* ---- heading ---- */}
         <h2 className="text-center font-heading text-[32px] font-normal uppercase leading-[1.1] text-[#272522] sm:text-[48px] xl:text-[65px]">
           Explore the collections
@@ -58,14 +58,14 @@ const ExploreCollections = () => {
 
         {/* ---- products area (WooCommerce products will go here) ----
             Use `activeTab` to fetch / filter products by category. */}
-        <div>
+        <div className="mt-10">
         {activeTab === "all-pieces" && <AllPieces />}
 
-        {activeTab === "rings" && <Rings />}
+        {activeTab === "rings" && <RingSlider />}
 
-        {activeTab === "bespoke-watches" && <BespokeWatches />}
+        {activeTab === "bespoke-watches" && <BespokeWatchesSlider />}
 
-        {activeTab === "leather-straps" && <BespokeStraps />}
+        {activeTab === "leather-straps" && <BespokeStrapsSlider />}
       </div>
       </div>
     </section>
