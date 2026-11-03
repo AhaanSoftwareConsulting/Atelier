@@ -1,9 +1,27 @@
 @import "tailwindcss";
 
-body{
+body {
   font-family: "Work Sans", sans-serif;
 }
-.font-heading{
-   font-family: "Fraunces", serif;
+
+.font-heading {
+  font-family: "Fraunces", serif;
 }
 
+@theme {
+  --font-body: "Work Sans", sans-serif;
+
+  /* ripple (video button) */
+  --animate-ripple: ripple 2.4s ease-out infinite;
+
+  @keyframes ripple {
+    0% {
+      transform: scale(1);
+      background-color: #ffffff;
+    }
+    100% {
+      transform: scale(1.9);
+      background-color: #ffffff1a;
+    }
+  }
+}
