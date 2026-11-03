@@ -1,8 +1,9 @@
 import React from 'react'
+import ContactBanner from './ContactBanner'
 
 const ContactComponents = () => {
   return (
-    <div>ContactComponents</div>
+    <div><ContactBanner/></div>
   )
 }
 
