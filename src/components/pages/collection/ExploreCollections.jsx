@@ -23,7 +23,7 @@ const ExploreCollections = () => {
       {/* ===== max-width container ===== */}
       <div className="relative mt-10 mx-auto  max-w-[1440px] px-4 md:px-8 xl:px-[60px] py-[90px]">
         {/* ---- heading ---- */}
-        <h2 className="text-center font-heading text-[32px] font-normal uppercase leading-[1.1] text-[#272522] sm:text-[48px] xl:text-[65px]">
+        <h2 className="text-center font-heading text-4xl font-normal uppercase leading-[1.1] text-[#272522] lg:text-5xl xl:text-[65px]">
           Explore the collections
         </h2>
 
