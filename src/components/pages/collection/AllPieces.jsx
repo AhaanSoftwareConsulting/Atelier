@@ -222,7 +222,7 @@ const AllPieces = () => {
                                                 key={`${product.id}-${slideIndex}`}
                                                 ref={slideIndex === 0 ? cardRef : null}
                                                 aria-hidden={!isVisible}
-                                                className="min-w-0 shrink-0 basis-full sm:basis-[calc((100%-24px)/2)] lg:basis-[calc((100%-48px)/4)]"
+                                                className="min-w-0 shrink-0 basis-full sm:basis-[calc((100%-24px)/2)] lg:basis-[calc((100%-48px)/3)] xl:basis-[calc((100%-48px)/4)]"
                                             >
                                                 {/* Product image */}
                                                 <a
@@ -260,11 +260,11 @@ const AllPieces = () => {
                                                 </p>
 
                                                 {/* Buttons */}
-                                                <div className="mt-3 flex items-center gap-2 sm:gap-3">
+                                                <div className="mt-3 flex  items-center gap-2 sm:gap-3">
                                                     <a
                                                         href={product.permalink}
                                                         tabIndex={isVisible ? 0 : -1}
-                                                        className="flex  flex-1 items-center justify-center rounded-full border border-[#8D857A] px-12 py-5  font-medium tracking-wide text-[#292622] transition-all duration-300 hover:border-[#8B755A] hover:bg-[#8B755A] hover:text-white text-sm sm:text-base"
+                                                        className="flex  flex-1 items-center justify-center rounded-full border border-[#8D857A] px-8 py-4 xl:px-12 xl:py-5  font-medium tracking-wide text-[#292622] transition-all duration-300 hover:border-[#8B755A] hover:bg-[#8B755A] hover:text-white text-sm sm:text-base"
                                                     >
                                                         BUY NOW
                                                     </a>
@@ -272,7 +272,7 @@ const AllPieces = () => {
                                                     <a
                                                         href={`${product.permalink}#customize`}
                                                         tabIndex={isVisible ? 0 : -1}
-                                                        className="shrink-0  text-[#947653] underline underline-offset-4 transition-colors hover:text-[#493622] text-sm sm:text-base"
+                                                        className="shrink-0  text-[#947653] underline underline-offset-4 transition-colors hover:text-[#493622] text-sm xl:text-base"
                                                     >
                                                         Customize Now
                                                     </a>

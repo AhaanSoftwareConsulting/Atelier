@@ -32,7 +32,6 @@ const CollectionComponents = () => {
 
   return () => clearTimeout(timer);
 }, []);
-
   return (
     <div>
       <CollectionBanner />
