@@ -24,7 +24,7 @@ const Purpose = () => {
       <div className="mx-auto w-full max-w-[1440px] px-5 py-12 sm:px-8 sm:py-16 lg:px-[60px] lg:py-[80px]">
         {/* ---- heading + subtext (centered) ---- */}
         <div className="text-center text-[#272522]">
-          <h2 className="font-heading text-[32px] font-normal uppercase leading-[1.1] sm:text-[48px] lg:text-[65px]">
+          <h2 className="font-heading text-[32px] font-normal uppercase leading-[1.1] sm:text-[48px] xl:text-[65px]">
             Every detail has a purpose.
           </h2>
           <p className="mx-auto mt-4 max-w-[810px] text-[16px] font-normal leading-normal">
