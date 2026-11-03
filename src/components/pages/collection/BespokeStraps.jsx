@@ -4,7 +4,7 @@ import BespokeStrapsSlider from "./BespokeStrapsSlider";
 const BespokeStraps = ({id}) => {
   
   return (
-    <section id={id} className="w-full overflow-hidden bg-[#EDE7DE]">
+    <section id={id} className="w-full overflow-hidden bg-[#EDE7DE] scroll-mt-24">
       {/* ===== max-width container ===== */}
       <div className="relative mx-auto w-full max-w-[1440px]  px-4 md:px-8 xl:px-[60px] py-[90px]">
         {/* ---- top row: heading (left) + description (right) ---- */}
