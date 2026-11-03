@@ -154,7 +154,7 @@ const AllPieces = () => {
     return (
         <section className="w-full overflow-hidden ">
             {/* ===== max-width container ===== */}
-            <div className="relative mx-auto w-ful">
+            <div className="relative mx-auto w-full">
                
 
                 {/* AllPieces slider */}
@@ -243,18 +243,18 @@ const AllPieces = () => {
                                                 </a>
 
                                                 {/* Product title + price */}
-                                                <div className="mt-3 flex items-center justify-between gap-2">
-                                                    <h3 className="min-w-0 truncate font-heading text-[16px] font-normal text-[#292622] sm:text-[18px]">
+                                                <div className="mt-3 flex items-center justify-between">
+                                                    <h3 className="min-w-0 truncate font-heading text-base font-normal text-[#292622] sm:text-xl">
                                                         {product.name}
                                                     </h3>
 
-                                                    <span className="shrink-0 text-[11px] font-semibold italic text-[#947653] sm:text-[12px]">
+                                                    <span className="shrink-0 text-sm font-semibold italic text-[#947653] me-2.5">
                                                         From {formatProductPrice(product)}
                                                     </span>
                                                 </div>
 
                                                 {/* Description */}
-                                                <p className="mt-2 min-h-[20px] truncate text-[11px] leading-relaxed text-[#575149] sm:text-[12px]">
+                                                <p className="mt-2  truncate text-sm leading-relaxed text-[#575149] sm:text-base">
                                                     {description ||
                                                         "Discover the details of this handcrafted piece."}
                                                 </p>

@@ -8,21 +8,30 @@ import ArtSlider from "../home/ArtSlider";
 
 const CollectionComponents = () => {
   useEffect(() => {
-    const scrollToSection = () => {
-      const sectionId = window.location.hash.substring(1);
+  const scrollToHash = () => {
+    const sectionId = window.location.hash.substring(1);
 
-      if (!sectionId) return;
+    if (!sectionId) return;
 
-      document.getElementById(sectionId)?.scrollIntoView({
+    const section = document.getElementById(sectionId);
+
+    if (section) {
+      const headerOffset = 100;
+
+      const sectionPosition =
+        section.getBoundingClientRect().top + window.scrollY;
+
+      window.scrollTo({
+        top: sectionPosition - headerOffset,
         behavior: "smooth",
-        block: "start",
       });
-    };
+    }
+  };
 
-    requestAnimationFrame(() => {
-      requestAnimationFrame(scrollToSection);
-    });
-  }, []);
+  const timer = setTimeout(scrollToHash, 300);
+
+  return () => clearTimeout(timer);
+}, []);
 
   return (
     <div>

@@ -1,3 +1,4 @@
+
 import React, {
   useState,
   useEffect,
@@ -13,6 +14,107 @@ import {
   formatProductPrice,
 } from "../../../api/WooCommerceApi";
 
+// Normalize colour values from WooCommerce.
+const normalizeColor = (color) => {
+  if (typeof color === "string") return color.trim();
+
+  if (color && typeof color === "object") {
+    return (
+      color.name ||
+      color.option ||
+      color.value ||
+      color.slug ||
+      ""
+    ).toString().trim();
+  }
+
+  return "";
+};
+
+// Find the colour attribute dynamically.
+const getColorAttribute = (product) => {
+  return product.attributes?.find((attribute) => {
+    const name = (attribute.name || "").trim().toLowerCase();
+    const taxonomy = (attribute.taxonomy || "").trim().toLowerCase();
+
+    return (
+      name === "color" ||
+      name === "colour" ||
+      taxonomy.includes("color") ||
+      taxonomy.includes("colour")
+    );
+  });
+};
+
+// Extract colours from both simple and variable products.
+const getProductColors = (product) => {
+  const colorAttribute = getColorAttribute(product);
+
+  let rawColors = [];
+
+  if (colorAttribute) {
+    const terms =
+      colorAttribute.terms ??
+      colorAttribute.options ??
+      colorAttribute.value ??
+      [];
+
+    if (typeof terms === "string") {
+      rawColors = terms.split("|");
+    } else if (Array.isArray(terms)) {
+      rawColors = terms;
+    }
+  }
+
+  // If the parent attribute has no terms, read variation attributes.
+  if (rawColors.length === 0 && product.type === "variable") {
+    product.variations?.forEach((variation) => {
+      variation.attributes?.forEach((attribute) => {
+        const name = (attribute.name || "").toLowerCase();
+
+        if (
+          name.includes("color") ||
+          name.includes("colour")
+        ) {
+          rawColors.push(attribute.option || attribute.value || "");
+        }
+      });
+    });
+  }
+
+  return [...new Set(rawColors.map(normalizeColor).filter(Boolean))];
+};
+
+// Find the matching variation for a selected colour.
+const getSelectedVariation = (product, selectedColor) => {
+  if (!selectedColor || product.type !== "variable") return null;
+
+  return (
+    product.variations?.find((variation) =>
+      variation.attributes?.some((attribute) => {
+        const name = (attribute.name || "").toLowerCase();
+        const value = normalizeColor(
+          attribute.option || attribute.value
+        );
+
+        return (
+          (name.includes("color") || name.includes("colour")) &&
+          value.toLowerCase() === selectedColor.toLowerCase()
+        );
+      })
+    ) || null
+  );
+};
+
+// Read a variation image if WooCommerce includes it.
+const getVariationImage = (variation) => {
+  return (
+    variation?.image?.src ||
+    variation?.images?.[0]?.src ||
+    variation?.image?.url ||
+    null
+  );
+};
 
 const BespokeStrapsSlider = () => {
   const [products, setProducts] = useState([]);
@@ -24,10 +126,12 @@ const BespokeStrapsSlider = () => {
   const [paused, setPaused] = useState(false);
   const [animate, setAnimate] = useState(true);
 
+  const [selectedColors, setSelectedColors] = useState({});
+
   const cardRef = useRef(null);
   const touchStartX = useRef(0);
 
-  // Fetch BespokeStraps category products
+  // Fetch products dynamically from WooCommerce Store API.
   useEffect(() => {
     let mounted = true;
 
@@ -44,7 +148,8 @@ const BespokeStrapsSlider = () => {
         }
       } catch (err) {
         if (mounted) {
-          setError("Unable to load BespokeStraps. Please try again.");
+          console.error("Bespoke Straps API Error:", err);
+          setError("Unable to load Bespoke Straps. Please try again.");
         }
       } finally {
         if (mounted) setLoading(false);
@@ -58,7 +163,7 @@ const BespokeStrapsSlider = () => {
     };
   }, []);
 
-  // Responsive slider measurements
+  // Responsive slider measurements.
   useEffect(() => {
     const updateSlider = () => {
       const width = window.innerWidth;
@@ -68,8 +173,8 @@ const BespokeStrapsSlider = () => {
       );
 
       if (cardRef.current) {
-        const width = cardRef.current.getBoundingClientRect().width;
-        setCardStep(width + 24);
+        const cardWidth = cardRef.current.getBoundingClientRect().width;
+        setCardStep(cardWidth + 24);
       }
     };
 
@@ -89,7 +194,7 @@ const BespokeStrapsSlider = () => {
     };
   }, [products.length]);
 
-  // Infinite slider navigation
+  // Infinite slider navigation.
   const canSlide = products.length > visibleCount;
 
   const nextSlide = useCallback(() => {
@@ -106,7 +211,7 @@ const BespokeStrapsSlider = () => {
     setIndex((prev) => prev - 1);
   }, [canSlide]);
 
-  // Seamless loop reset
+  // Seamless loop reset.
   const handleTransitionEnd = (event) => {
     if (event.propertyName !== "transform") return;
 
@@ -123,7 +228,7 @@ const BespokeStrapsSlider = () => {
     }
   };
 
-  // Re-enable transition after invisible reset
+  // Re-enable transition after invisible reset.
   useEffect(() => {
     if (animate) return;
 
@@ -134,7 +239,7 @@ const BespokeStrapsSlider = () => {
     return () => cancelAnimationFrame(frame);
   }, [animate]);
 
-  // Automatic slider
+  // Automatic slider.
   useEffect(() => {
     if (paused || loading || !canSlide) return;
 
@@ -146,163 +251,230 @@ const BespokeStrapsSlider = () => {
     return () => clearInterval(timer);
   }, [paused, loading, canSlide]);
 
-  // Duplicate products for infinite looping
+  // Duplicate products for infinite looping.
   const slides =
     products.length > 0
       ? [...products, ...products, ...products]
       : [];
+
   return (
-     
-        <div
-          className="relative mt-8 lg:mt-10"
-          onMouseEnter={() => setPaused(true)}
-          onMouseLeave={() => setPaused(false)}
-          onFocusCapture={() => setPaused(true)}
-          onBlurCapture={(event) => {
-            if (!event.currentTarget.contains(event.relatedTarget)) {
-              setPaused(false);
-            }
-          }}
-          onTouchStart={(event) => {
-            touchStartX.current = event.touches[0].clientX;
-          }}
-          onTouchEnd={(event) => {
-            const delta =
-              touchStartX.current - event.changedTouches[0].clientX;
+    <div
+      className="relative mt-8 lg:mt-10"
+      onMouseEnter={() => setPaused(true)}
+      onMouseLeave={() => setPaused(false)}
+      onFocusCapture={() => setPaused(true)}
+      onBlurCapture={(event) => {
+        if (!event.currentTarget.contains(event.relatedTarget)) {
+          setPaused(false);
+        }
+      }}
+      onTouchStart={(event) => {
+        touchStartX.current = event.touches[0].clientX;
+      }}
+      onTouchEnd={(event) => {
+        const delta =
+          touchStartX.current - event.changedTouches[0].clientX;
 
-            if (Math.abs(delta) > 45) {
-              delta > 0 ? nextSlide() : prevSlide();
-            }
-          }}
-        >
-          {loading ? (
-            <p className="py-16 text-center text-sm text-[#82796d]">
-              Loading BespokeStraps...
-            </p>
-          ) : error ? (
-            <p className="py-12 text-center text-sm text-[#82796d]">
-              {error}
-            </p>
-          ) : products.length === 0 ? (
-            <p className="py-12 text-center text-sm text-[#82796d]">
-              No products found in the BespokeStraps category.
-            </p>
-          ) : (
-            <>
-              {/* Slider track */}
-              <div className="overflow-hidden">
-                <div
-                  className="flex gap-6"
-                  style={{
-                    transform: `translateX(-${index * cardStep}px)`,
-                    transition: animate
-                      ? "transform 500ms ease-in-out"
-                      : "none",
-                  }}
-                  onTransitionEnd={handleTransitionEnd}
-                >
-                  {slides.map((product, slideIndex) => {
-                    const isVisible =
-                      slideIndex >= index &&
-                      slideIndex < index + visibleCount;
+        if (Math.abs(delta) > 45) {
+          delta > 0 ? nextSlide() : prevSlide();
+        }
+      }}
+    >
+      {loading ? (
+        <p className="py-16 text-center text-sm text-[#82796d]">
+          Loading Bespoke Straps...
+        </p>
+      ) : error ? (
+        <p className="py-12 text-center text-sm text-[#82796d]">
+          {error}
+        </p>
+      ) : products.length === 0 ? (
+        <p className="py-12 text-center text-sm text-[#82796d]">
+          No products found in the Bespoke Straps category.
+        </p>
+      ) : (
+        <>
+          <div className="overflow-hidden">
+            <div
+              className="flex gap-6"
+              style={{
+                transform: `translateX(-${index * cardStep}px)`,
+                transition: animate
+                  ? "transform 500ms ease-in-out"
+                  : "none",
+              }}
+              onTransitionEnd={handleTransitionEnd}
+            >
+              {slides.map((product, slideIndex) => {
+                const isVisible =
+                  slideIndex >= index &&
+                  slideIndex < index + visibleCount;
 
-                    const description = cleanDescription(
-                      product.short_description ||
-                      product.description ||
-                      ""
-                    );
+                const description = cleanDescription(
+                  product.short_description ||
+                    product.description ||
+                    ""
+                );
 
-                    return (
-                      <article
-                        key={`${product.id}-${slideIndex}`}
-                        ref={slideIndex === 0 ? cardRef : null}
-                        aria-hidden={!isVisible}
-                        className="min-w-0 shrink-0 basis-full sm:basis-[calc((100%-24px)/2)] lg:basis-[calc((100%-48px)/4)]"
+                const colors = getProductColors(product);
+
+                const selectedColor =
+                  selectedColors[product.id] || colors[0];
+
+                const selectedVariation = getSelectedVariation(
+                  product,
+                  selectedColor
+                );
+
+                const variationImage =
+                  getVariationImage(selectedVariation);
+
+                const productImage =
+                  variationImage || product.images?.[0]?.src;
+
+                const productImageAlt =
+                  selectedVariation?.image?.alt ||
+                  product.images?.[0]?.alt ||
+                  product.name;
+
+                return (
+                  <article
+                    key={`${product.id}-${slideIndex}`}
+                    ref={slideIndex === 0 ? cardRef : null}
+                    aria-hidden={!isVisible}
+                    className="min-w-0 shrink-0 basis-full sm:basis-[calc((100%-24px)/2)] lg:basis-[calc((100%-48px)/4)]"
+                  >
+                    {/* Product image */}
+                    <a
+                      href={product.permalink}
+                      tabIndex={isVisible ? 0 : -1}
+                      aria-label={`View ${product.name}`}
+                      className="group block aspect-[1.01/1] overflow-hidden bg-[#DED4C7]"
+                    >
+                      <img
+                        src={productImage}
+                        alt={productImageAlt}
+                        loading={slideIndex < 4 ? "eager" : "lazy"}
+                        draggable="false"
+                        className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                      />
+                    </a>
+
+                    {/* Product title + price */}
+                    <div className="mt-3 flex items-center justify-between">
+                      <h3 className="min-w-0 truncate font-heading text-base font-normal text-[#292622] sm:text-xl">
+                        {product.name}
+                      </h3>
+
+                      <span className="shrink-0 text-sm font-semibold italic text-[#947653] sm:text-base me-2.5">
+                        From {formatProductPrice(product)}
+                      </span>
+                    </div>
+
+                    {/* Description */}
+                    <p className="mt-2  truncate text-sm leading-relaxed text-[#575149] sm:text-base">
+                      {description ||
+                        "Discover the details of this handcrafted piece."}
+                    </p>
+
+                    {/* Leather colour swatches */}
+                    {colors.length > 0 && (
+                      <div className="mt-2 flex min-h-[20px] items-center gap-1.5">
+                        <div className="flex items-center gap-1.5">
+                          {colors.map((color, colorIndex) => {
+                            const isSelected = selectedColor === color;
+
+                            const isHex =
+                              /^#([0-9A-F]{3}){1,2}$/i.test(color);
+
+                            return (
+                              <button
+                                key={`${product.id}-${color}-${colorIndex}`}
+                                type="button"
+                                title={color}
+                                aria-label={`Select leather colour ${color}`}
+                                aria-pressed={isSelected}
+                                tabIndex={isVisible ? 0 : -1}
+                                onClick={() =>
+                                  setSelectedColors((prev) => ({
+                                    ...prev,
+                                    [product.id]: color,
+                                  }))
+                                }
+                                className={`h-4 w-4 shrink-0 rounded-full transition-all duration-200 ${
+                                  isSelected
+                                    ? "ring-1 ring-[#8B755A] ring-offset-1"
+                                    : "border border-black/10 hover:ring-1 hover:ring-[#8B755A]"
+                                }`}
+                                style={{
+                                  backgroundColor: isHex ? color : undefined,
+                                }}
+                              >
+                                {!isHex && (
+                                  <span className="block h-full w-full rounded-full bg-[#B79C8A]" />
+                                )}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        <span className="ml-1 text-base italic text-[#82796d]">
+                          {colors.length}{" "}
+                          {colors.length === 1 ? "leather" : "leathers"}
+                        </span>
+                      </div>
+                    )}
+
+                    {/* Buttons */}
+                    <div className="mt-3 flex items-center gap-2 sm:gap-3">
+                      <a
+                        href={product.permalink}
+                        tabIndex={isVisible ? 0 : -1}
+                        className="flex flex-1 items-center justify-center rounded-full border border-[#8D857A] px-12 py-5 text-sm font-medium tracking-wide text-[#292622] transition-all duration-300 hover:border-[#8B755A] hover:bg-[#8B755A] hover:text-white sm:text-base"
                       >
-                        {/* Product image */}
-                        <a
-                          href={product.permalink}
-                          tabIndex={isVisible ? 0 : -1}
-                          aria-label={`View ${product.name}`}
-                          className="group block aspect-[1.05/1] overflow-hidden bg-[#DED4C7]"
-                        >
-                          <img
-                            src={product.images?.[0]?.src}
-                            alt={
-                              product.images?.[0]?.alt || product.name
-                            }
-                            loading={slideIndex < 4 ? "eager" : "lazy"}
-                            draggable="false"
-                            className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
-                          />
-                        </a>
+                        BUY NOW
+                      </a>
 
-                        {/* Product title + price */}
-                        <div className="mt-3 flex items-center justify-between gap-2">
-                          <h3 className="min-w-0 truncate font-heading text-[16px] font-normal text-[#292622] sm:text-[18px]">
-                            {product.name}
-                          </h3>
+                      <a
+                        href={`${product.permalink}#customize`}
+                        tabIndex={isVisible ? 0 : -1}
+                        className="shrink-0 text-sm text-[#947653] underline underline-offset-4 transition-colors hover:text-[#493622] sm:text-base"
+                      >
+                        Customize Now
+                      </a>
+                    </div>
+                  </article>
+                );
+              })}
+            </div>
+          </div>
 
-                          <span className="shrink-0 text-[11px] font-semibold italic text-[#947653] sm:text-[12px]">
-                            From {formatProductPrice(product)}
-                          </span>
-                        </div>
+          {/* Navigation arrows */}
+          {canSlide && (
+            <>
+              <button
+                type="button"
+                onClick={prevSlide}
+                aria-label="Previous Bespoke Straps"
+                className="absolute left-0 top-[48%] z-10 flex h-7 w-6 -translate-y-1/2 items-center justify-center rounded-r bg-[#8B755A] text-white transition-colors hover:bg-[#6f5b42]"
+              >
+                <CaretLeft size={18} weight="regular" />
+              </button>
 
-                        {/* Description */}
-                        <p className="mt-2 min-h-[20px] truncate text-[11px] leading-relaxed text-[#575149] sm:text-[12px]">
-                          {description ||
-                            "Discover the details of this handcrafted piece."}
-                        </p>
-
-                        {/* Buttons */}
-                        <div className="mt-3 flex items-center gap-2 sm:gap-3">
-                          <a
-                            href={product.permalink}
-                            tabIndex={isVisible ? 0 : -1}
-                            className="flex  flex-1 items-center justify-center rounded-full border border-[#8D857A] px-12 py-5  font-medium tracking-wide text-[#292622] transition-all duration-300 hover:border-[#8B755A] hover:bg-[#8B755A] hover:text-white text-sm sm:text-base"
-                          >
-                            BUY NOW
-                          </a>
-
-                          <a
-                            href={`${product.permalink}#customize`}
-                            tabIndex={isVisible ? 0 : -1}
-                            className="shrink-0  text-[#947653] underline underline-offset-4 transition-colors hover:text-[#493622] text-sm sm:text-base"
-                          >
-                            Customize Now
-                          </a>
-                        </div>
-                      </article>
-                    );
-                  })}
-                </div>
-              </div>
-
-              {/* Navigation arrows */}
-              {canSlide && (
-                <>
-                  <button
-                    type="button"
-                    onClick={prevSlide}
-                    aria-label="Previous BespokeStraps"
-                    className="absolute left-0 top-[48%] z-10 flex h-7 w-6 -translate-y-1/2 items-center justify-center rounded-r bg-[#8B755A] text-white transition-colors hover:bg-[#6f5b42]"
-                  >
-                    <CaretLeft size={18} weight="regular" />
-                  </button>
-
-                  <button
-                    type="button"
-                    onClick={nextSlide}
-                    aria-label="Next BespokeStraps"
-                    className="absolute right-0 top-[48%] z-10 flex h-7 w-6 -translate-y-1/2 items-center justify-center rounded-l bg-[#8B755A] text-white transition-colors hover:bg-[#6f5b42]"
-                  >
-                    <CaretRight size={18} weight="regular" />
-                  </button>
-                </>
-              )}
+              <button
+                type="button"
+                onClick={nextSlide}
+                aria-label="Next Bespoke Straps"
+                className="absolute right-0 top-[48%] z-10 flex h-7 w-6 -translate-y-1/2 items-center justify-center rounded-l bg-[#8B755A] text-white transition-colors hover:bg-[#6f5b42]"
+              >
+                <CaretRight size={18} weight="regular" />
+              </button>
             </>
           )}
-        </div>
+        </>
+      )}
+    </div>
+  );
+};
 
-        )};
 export default BespokeStrapsSlider;
