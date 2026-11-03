@@ -27,7 +27,7 @@ const Purpose = () => {
           <h2 className="font-heading text-[32px] font-normal uppercase leading-[1.1] sm:text-[48px] lg:text-[65px]">
             Every detail has a purpose.
           </h2>
-          <p className="mx-auto mt-4 max-w-[640px] text-[16px] font-normal leading-normal">
+          <p className="mx-auto mt-4 max-w-[810px] text-[16px] font-normal leading-normal">
             Look closer at the materials, the process, and the finishing touches
             that give each piece its character.
           </p>
