@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import bgImage from "../../../assets/cta1.png"; // adjust the path to match where this file sits
 
 const Discover = () => {
@@ -31,12 +32,13 @@ const Discover = () => {
             difference. Discover the thought and care behind each piece.
           </p>
 
-          <button
-            type="button"
-            className="cursor-pointer mt-8 w-fit rounded-full bg-[#8B755A] px-8 py-3.5 text-[16px] font-medium uppercase text-white transition-all duration-300 hover:bg-[#A08868] hover:shadow-lg active:scale-95"
+          <Link
+            to="/about"
+            onClick={() => window.scrollTo({ top: 0, left: 0, behavior: "instant" })}
+            className="cursor-pointer mt-8 inline-block w-fit rounded-full bg-[#8B755A] px-8 py-3.5 text-[16px] font-medium uppercase text-white transition-all duration-300 hover:bg-[#A08868] hover:shadow-lg active:scale-95"
           >
             Discover Our Philosophy
-          </button>
+          </Link>
         </div>
       </div>
     </section>
