@@ -1,9 +1,12 @@
 import React from 'react'
 import ContactBanner from './ContactBanner'
+import ContactSection from './ContactSection'
 
 const ContactComponents = () => {
   return (
-    <div><ContactBanner/></div>
+    <div><ContactBanner/>
+    <ContactSection/>
+    </div>
   )
 }
 
