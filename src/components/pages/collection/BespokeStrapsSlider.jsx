@@ -85,33 +85,84 @@ const getProductColors = (product) => {
   return [...new Set(rawColors.map(normalizeColor).filter(Boolean))];
 };
 
-// Find the matching variation for a selected colour.
+// Normalize values so "Forest Suede" and "forest-suede"
+// can match each other.
+const normalizeColorValue = (value) => {
+  return normalizeColor(value)
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
+};
+
+// Get variation attributes from different WooCommerce response shapes.
+const getVariationAttributes = (variation) => {
+  const attributes =
+    variation?.attributes ||
+    variation?.attributes_data ||
+    [];
+
+  if (Array.isArray(attributes)) {
+    return attributes;
+  }
+
+  if (attributes && typeof attributes === "object") {
+    return Object.entries(attributes).map(([name, value]) => ({
+      name,
+      value,
+    }));
+  }
+
+  return [];
+};
+
+
+// Find the variation matching the selected colour.
 const getSelectedVariation = (product, selectedColor) => {
-  if (!selectedColor || product.type !== "variable") return null;
+  if (!selectedColor || product.type !== "variable") {
+    return null;
+  }
+
+  const selectedValue = normalizeColorValue(selectedColor);
 
   return (
-    product.variations?.find((variation) =>
-      variation.attributes?.some((attribute) => {
-        const name = (attribute.name || "").toLowerCase();
-        const value = normalizeColor(
-          attribute.option || attribute.value
-        );
+    product.variations?.find((variation) => {
+      const variationAttributes =
+        getVariationAttributes(variation);
+
+      return variationAttributes.some((attribute) => {
+        const attributeName = (
+          attribute.name ||
+          attribute.taxonomy ||
+          attribute.slug ||
+          ""
+        ).toLowerCase();
+
+        const isColorAttribute =
+          attributeName.includes("color") ||
+          attributeName.includes("colour");
+
+        if (!isColorAttribute) return false;
+
+        const variationColor =
+          attribute.option ??
+          attribute.value ??
+          attribute.slug ??
+          attribute.name;
 
         return (
-          (name.includes("color") || name.includes("colour")) &&
-          value.toLowerCase() === selectedColor.toLowerCase()
+          normalizeColorValue(variationColor) === selectedValue
         );
-      })
-    ) || null
+      });
+    }) || null
   );
 };
 
-// Read a variation image if WooCommerce includes it.
+
+// Extract the image belonging to the selected variation.
 const getVariationImage = (variation) => {
   return (
-    variation?.image?.src ||
     variation?.images?.[0]?.src ||
-    variation?.image?.url ||
+    variation?.image?.src ||
+    variation?.images?.[0]?.thumbnail ||
     null
   );
 };
@@ -135,6 +186,7 @@ const BespokeStrapsSlider = () => {
   useEffect(() => {
     let mounted = true;
 
+
     const getBespokeStraps = async () => {
       try {
         setLoading(true);
@@ -142,21 +194,83 @@ const BespokeStrapsSlider = () => {
 
         const data = await fetchProductsByCategory("leather-straps");
 
-        if (mounted) {
-          setProducts(data);
-          setIndex(data.length);
+        // Collect all variation IDs from variable products.
+        const variationIds = [
+          ...new Set(
+            data.flatMap((product) =>
+              product.type === "variable"
+                ? (product.variations || []).map(
+                  (variation) => variation.id
+                )
+                : []
+            )
+          ),
+        ];
+
+        let variationDetails = {};
+
+        // Fetch variation records, including their images.
+        if (variationIds.length > 0 && data.length > 0) {
+          const origin = new URL(data[0].permalink).origin;
+
+          const variationUrl = new URL(
+            "/wp-json/wc/store/v1/products",
+            origin
+          );
+
+          variationUrl.searchParams.set("type", "variation");
+          variationUrl.searchParams.set(
+            "include",
+            variationIds.join(",")
+          );
+          variationUrl.searchParams.set(
+            "per_page",
+            String(variationIds.length)
+          );
+
+          const response = await fetch(variationUrl);
+
+          if (!response.ok) {
+            throw new Error("Unable to fetch variation images");
+          }
+
+          const variations = await response.json();
+
+          variationDetails = Object.fromEntries(
+            variations.map((variation) => [
+              variation.id,
+              variation,
+            ])
+          );
         }
+
+        // Merge variation image data into the parent products.
+        const updatedProducts = data.map((product) => ({
+          ...product,
+          variations: (product.variations || []).map(
+            (variation) => ({
+              ...variation,
+              ...(variationDetails[variation.id] || {}),
+              attributes:
+                variation.attributes ||
+                variationDetails[variation.id]?.attributes ||
+                [],
+            })
+          ),
+        }));
+
+        setProducts(updatedProducts);
+        setIndex(updatedProducts.length);
       } catch (err) {
-        if (mounted) {
-          console.error("Bespoke Straps API Error:", err);
-          setError("Unable to load Bespoke Straps. Please try again.");
-        }
+        console.error("Bespoke Straps API Error:", err);
+        setError("Unable to load Bespoke Straps. Please try again.");
       } finally {
-        if (mounted) setLoading(false);
+        setLoading(false);
       }
     };
 
     getBespokeStraps();
+
 
     return () => {
       mounted = false;
@@ -306,17 +420,19 @@ const BespokeStrapsSlider = () => {
               onTransitionEnd={handleTransitionEnd}
             >
               {slides.map((product, slideIndex) => {
+
                 const isVisible =
                   slideIndex >= index &&
                   slideIndex < index + visibleCount;
 
                 const description = cleanDescription(
                   product.short_description ||
-                    product.description ||
-                    ""
+                  product.description ||
+                  ""
                 );
 
                 const colors = getProductColors(product);
+
 
                 const selectedColor =
                   selectedColors[product.id] || colors[0];
@@ -326,23 +442,27 @@ const BespokeStrapsSlider = () => {
                   selectedColor
                 );
 
-                const variationImage =
-                  getVariationImage(selectedVariation);
+                const variationImage = getVariationImage(
+                  selectedVariation
+                );
 
                 const productImage =
-                  variationImage || product.images?.[0]?.src;
+                  variationImage ||
+                  product.images?.[0]?.src ||
+                  "";
 
                 const productImageAlt =
                   selectedVariation?.image?.alt ||
                   product.images?.[0]?.alt ||
                   product.name;
+                
 
                 return (
                   <article
                     key={`${product.id}-${slideIndex}`}
                     ref={slideIndex === 0 ? cardRef : null}
                     aria-hidden={!isVisible}
-                    className="min-w-0 shrink-0 basis-full sm:basis-[calc((100%-24px)/2)] lg:basis-[calc((100%-48px)/3)] xl:basis-[calc((100%-48px)/4)]"
+                    className="min-w-0 shrink-0 basis-full sm:basis-[calc((100%-24px)/2)] lg:basis-[calc((100%-48px)/3)] xl:basis-[calc((100%-72px)/4)]"
                   >
                     {/* Product image */}
                     <a
@@ -401,11 +521,10 @@ const BespokeStrapsSlider = () => {
                                     [product.id]: color,
                                   }))
                                 }
-                                className={`h-4 w-4 shrink-0 rounded-full transition-all duration-200 ${
-                                  isSelected
-                                    ? "ring-1 ring-[#8B755A] ring-offset-1"
-                                    : "border border-black/10 hover:ring-1 hover:ring-[#8B755A]"
-                                }`}
+                                className={`h-4 w-4 shrink-0 rounded-full transition-all duration-200 ${isSelected
+                                  ? "ring-1 ring-[#8B755A] ring-offset-1"
+                                  : "border border-black/10 hover:ring-1 hover:ring-[#8B755A]"
+                                  }`}
                                 style={{
                                   backgroundColor: isHex ? color : undefined,
                                 }}
@@ -430,7 +549,7 @@ const BespokeStrapsSlider = () => {
                       <a
                         href={product.permalink}
                         tabIndex={isVisible ? 0 : -1}
-                        className="flex flex-1 items-center justify-center rounded-full border border-[#8D857A] px-8 py-4 xl:px-12 xl:py-5 text-sm font-medium tracking-wide text-[#292622] transition-all duration-300 hover:border-[#8B755A] hover:bg-[#8B755A] hover:text-white sm:text-base"
+                        className="flex flex-1 items-center justify-center rounded-full border border-[#8D857A] p-4 xl:px-12 xl:py-5 text-sm font-medium tracking-wide text-[#292622] transition-all duration-300 hover:border-[#8B755A] hover:bg-[#8B755A] hover:text-white sm:text-base"
                       >
                         BUY NOW
                       </a>
