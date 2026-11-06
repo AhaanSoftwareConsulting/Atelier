@@ -549,7 +549,7 @@ const BespokeStrapsSlider = () => {
                       <a
                         href={product.permalink}
                         tabIndex={isVisible ? 0 : -1}
-                        className="flex flex-1 items-center justify-center rounded-full border border-[#8D857A] p-4 xl:px-12 xl:py-5 text-sm font-medium tracking-wide text-[#292622] transition-all duration-300 hover:border-[#8B755A] hover:bg-[#8B755A] hover:text-white sm:text-base"
+                        className="flex  flex-1 items-center justify-center rounded-full border border-[#8D857A] p-4 xl:px-12 xl:py-5  font-medium tracking-wide text-[#292622] transition-all duration-300 hover:border-[#8B755A] hover:bg-[#8B755A] hover:text-white text-sm sm:text-base"
                       >
                         BUY NOW
                       </a>
