@@ -50,7 +50,7 @@ const ArtSlider = () => {
             <div className="mx-auto max-w-[1440px] text-center">
 
                 {/* Section heading */}
-                <h2 className="mb-6 font-heading text-4xl font-normal leading-tight text-[272522] lg:text-5xl xl:text-[75px]">
+                <h2 className="mb-6 font-heading text-3xl font-normal leading-tight text-[272522] lg:text-5xl xl:text-[75px]">
                     THE ART OF <br className='hidden lg:block'/> THE EXTRAORDINARY
                 </h2>
 

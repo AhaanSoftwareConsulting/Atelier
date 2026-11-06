@@ -43,7 +43,7 @@ const ExploreCollections = () => {
                   role="tab"
                   aria-selected={isActive}
                   onClick={() => setActiveTab(tab.value)}
-                  className={`cursor-pointer whitespace-nowrap rounded-full px-5 py-2.5 text-[16px] font-medium transition-colors duration-300 ${
+                  className={`cursor-pointer whitespace-nowrap rounded-full px-4 py-2.5 text-sm font-medium transition-colors duration-300 ${
                     isActive
                       ? "bg-[#8B755A] text-white"
                       : "bg-transparent text-[#272522] hover:bg-[#8B755A]/10"

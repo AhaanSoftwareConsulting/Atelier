@@ -9,7 +9,7 @@ const Rings = ({id}) => {
 
         {/* Heading and description */}
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between md:gap-10">
-          <h2 className="text-left font-heading text-4xl font-normal uppercase leading-[1.1] text-[#272522] lg:text-5xl xl:text-[65px]">
+          <h2 className="text-left font-heading text-3xl font-normal uppercase leading-[1.1] text-[#272522] lg:text-5xl xl:text-[65px]">
             Rings
           </h2>
 
